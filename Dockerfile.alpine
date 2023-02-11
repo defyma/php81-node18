@@ -1,0 +1,44 @@
+# Use Alpine as the base image
+FROM alpine:3.17
+
+# Set the working directory
+WORKDIR /var/www/html
+
+# Update and install Apache2 and PHP
+RUN apk update && apk add apache2 php-apache2 \
+        apache2-ssl curl php-apache2 php-bcmath php-bz2 php-calendar php-common php-ctype \
+        php-curl php-dom php-gd php-iconv php-mbstring php-mysqli php-mysqlnd \
+        php-pgsql php-openssl php-pdo_mysql php-pdo_pgsql php-pdo_sqlite php-phar php-session php-xml \
+        php-zip php-sqlite3 php-json php-ldap php-intl php-soap php-gmp php-xmlreader php-xmlwriter php-fileinfo php-tokenizer \
+        php-simplexml php-ftp php-sockets php-bcmath php-bz2 php-calendar php-ctype php-curl php-dom php-exif php-ffi \
+        php-fileinfo php-ftp php-gd php-gettext php-gmp php-iconv php-intl php-json php-ldap php-mbstring php-mysqli \
+        php-mysqlnd php-openssl php-pcntl php-pdo php-pdo_mysql php-pdo_pgsql php-pgsql php-phar php-posix php-session php-shmop php-simplexml \
+        php-soap php-sockets php-sodium php-sysvmsg php-sysvsem php-sysvshm php-tokenizer php-xml \
+        php-xmlreader php-xmlwriter php-xsl php-zip php-zlib nodejs npm
+
+# Yarn Package Manager
+RUN npm i -g corepack && corepack enable && corepack prepare yarn@stable --activate
+
+# Configure Apache to listen on 0.0.0.0:8080
+RUN echo "Listen 0.0.0.0:8080" >> /etc/apache2/httpd.conf
+
+# Enable the mod_rewrite module in Apache
+RUN sed -i 's/#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' /etc/apache2/httpd.conf
+
+# Configure Apache to allow .htaccess files
+RUN sed -i 's/AllowOverride\ None/AllowOverride\ All/' /etc/apache2/httpd.conf
+
+# Set the document root to /var/www/html
+RUN sed -i 's/\/var\/www\/localhost\/htdocs/\/var\/www\/html/' /etc/apache2/httpd.conf
+
+RUN sed -i 's/DirectoryIndex\ index.html/DirectoryIndex\ index.php\ index.html/' /etc/apache2/httpd.conf
+
+# Turn on PHP error reporting
+RUN echo "display_errors = On" >> /etc/php81/php.ini
+
+# Expose ports 8080 and 8443
+EXPOSE 8080
+EXPOSE 8443
+
+# Start Apache
+CMD ["httpd", "-D", "FOREGROUND"]
