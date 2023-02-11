@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y php8.1 libapache2-mod-php8.1 php8.1-pgs
     nano php8.1-xdebug
 
 # Yarn Package Manager
-RUN corepack enable && npm i -g corepack && corepack prepare yarn@stable --activate
+RUN npm i -g corepack && corepack enable  && corepack prepare yarn@stable --activate
 
 # Configure Apache to use PHP
 RUN a2enmod php8.1
