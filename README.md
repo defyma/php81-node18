@@ -1,4 +1,4 @@
-# Docker PHP 8.1 Node 1.8
+# Docker PHP 8.1 Node 18
 
 - Ubuntu 22.04 / Alpine 3.17
 - PHP 8.1.x
