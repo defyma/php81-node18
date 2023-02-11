@@ -15,3 +15,8 @@ docker run --name <name> --mount type=bind,src=<path>,dst=/var/www/html -p <port
 ``
 docker run --name <name> --mount type=bind,src=<path>,dst=/var/www/html -p <port>:8080 -itd defyma/php81-node18:alpine
 ``
+
+## Ubuntu & PDO_OCI
+``
+docker run --name <name> --mount type=bind,src=<path>,dst=/var/www/html -p <port>:8080 -itd defyma/php81-node18:pdo_oci
+``
