@@ -1,0 +1,38 @@
+FROM defyma/php81-node18:latest
+
+# Update the package repository and install required packages
+RUN apt install -y libaio1 php8.1-dev
+
+# Download the Oracle Instant Client packages
+WORKDIR /tmp
+
+# Extract the packages and install them
+RUN mkdir /usr/lib/oracle
+RUN mkdir /usr/lib/oracle/21.9
+RUN mkdir /usr/lib/oracle/21.9/client64
+COPY /receipt/instantclient_21_9 /usr/lib/oracle/21.9/client64
+RUN echo /usr/lib/oracle/21.9/client64/lib > /etc/ld.so.conf.d/oracle.conf && ldconfig
+
+# Install the PHP OCI8 extension
+RUN pecl channel-update pecl.php.net
+RUN pecl install oci8
+
+RUN echo "extension=oci8.so" > /etc/php/8.1/mods-available/oci8.ini
+RUN ln -s /etc/php/8.1/mods-available/oci8.ini /etc/php/8.1/cli/conf.d/20-oci8.ini
+RUN ln -s /etc/php/8.1/mods-available/oci8.ini /etc/php/8.1/apache2/conf.d/20-oci8.ini
+
+# Install the PHP PDO_OCI extension
+COPY /receipt/pdo_oci /tmp
+RUN cd /tmp && \
+    cd pdo_oci && \
+    phpize && \
+    ./configure --with-pdo-oci=instantclient,/usr/lib/oracle/21.9/client64/lib,21.9 && \
+    make && \
+    make install
+
+RUN echo "extension=pdo_oci.so" > /etc/php/8.1/mods-available/pdo_oci.ini
+RUN ln -s /etc/php/8.1/mods-available/pdo_oci.ini /etc/php/8.1/cli/conf.d/20-pdo_oci.ini
+RUN ln -s /etc/php/8.1/mods-available/pdo_oci.ini /etc/php/8.1/apache2/conf.d/20-pdo_oci.ini
+
+# Start Apache
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
