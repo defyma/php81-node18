@@ -32,6 +32,7 @@ RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 
 # Configure Apache to listen on all IP addresses on port 8080
 RUN echo "Listen 0.0.0.0:8080" >> /etc/apache2/ports.conf
+RUN echo "Listen 0.0.0.0:8443" >> /etc/apache2/ports.conf
 
 # Config php.ini display_errors On
 RUN sed -i 's/display_errors = Off/display_errors = On/g' /etc/php/8.1/apache2/php.ini
@@ -39,6 +40,11 @@ RUN sed -i 's/display_errors = Off/display_errors = On/g' /etc/php/8.1/apache2/p
 # Expose the custom Apache ports
 EXPOSE 8080
 EXPOSE 8443
+
+# Log to stdout
+RUN ln -sf /dev/stdout /var/log/apache2/access.log
+RUN ln -sf /dev/stdout /var/log/apache2/other_vhosts_access.log
+RUN ln -sf /dev/stderr /var/log/apache2/error.log
 
 # Start Apache
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

@@ -21,6 +21,7 @@ RUN npm i -g corepack && corepack enable && corepack prepare yarn@stable --activ
 
 # Configure Apache to listen on 0.0.0.0:8080
 RUN echo "Listen 0.0.0.0:8080" >> /etc/apache2/httpd.conf
+RUN echo "Listen 0.0.0.0:8443" >> /etc/apache2/httpd.conf
 
 # Enable the mod_rewrite module in Apache
 RUN sed -i 's/#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' /etc/apache2/httpd.conf
@@ -35,6 +36,13 @@ RUN sed -i 's/DirectoryIndex\ index.html/DirectoryIndex\ index.php\ index.html/'
 
 # Turn on PHP error reporting
 RUN echo "display_errors = On" >> /etc/php81/php.ini
+
+# Log to stdout
+RUN ln -sf /dev/stdout /var/log/apache2/access.log
+RUN ln -sf /dev/stdout /var/log/apache2/ssl_access.log
+RUN ln -sf /dev/stdout /var/log/apache2/ssl_request.log
+RUN ln -sf /dev/stderr /var/log/apache2/error.log
+RUN ln -sf /dev/stderr /var/log/apache2/ssl_error.log
 
 # Expose ports 8080 and 8443
 EXPOSE 8080
