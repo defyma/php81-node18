@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y php8.1 libapache2-mod-php8.1 php8.1-pgs
   php8.1-mysqlnd php8.1-bcmath php8.1-gd php8.1-intl php8.1-ldap php8.1-mbstring \
   php8.1-pdo php8.1-soap php8.1-opcache php8.1-xml php8.1-gmp \
   php8.1-zip php8.1-apcu php8.1-bz2 php8.1-curl php8.1-sqlite3 php8.1-pdo-sqlite \
-    nano
+    nano php8.1-xdebug
 
 # Yarn Package Manager
 RUN corepack enable && npm i -g corepack && corepack prepare yarn@stable --activate
@@ -29,7 +29,6 @@ RUN a2enmod rewrite
 
 # Allow .htaccess files to override configuration settings
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
-
 
 # Configure Apache to listen on all IP addresses on port 8080
 RUN echo "Listen 0.0.0.0:8080" >> /etc/apache2/ports.conf
