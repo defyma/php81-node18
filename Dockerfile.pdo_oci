@@ -10,6 +10,10 @@ WORKDIR /tmp
 RUN mkdir /usr/lib/oracle
 RUN mkdir /usr/lib/oracle/21.9
 RUN mkdir /usr/lib/oracle/21.9/client64
+
+# Download https://download.oracle.com/otn_software/linux/instantclient/219000/instantclient-sdk-linux.x64-21.9.0.0.0dbru.zip
+# Download https://download.oracle.com/otn_software/linux/instantclient/219000/instantclient-basic-linux.x64-21.9.0.0.0dbru.zip
+# extract to /receipt/instantclient_21_9/lib
 COPY /receipt/instantclient_21_9 /usr/lib/oracle/21.9/client64
 RUN echo /usr/lib/oracle/21.9/client64/lib > /etc/ld.so.conf.d/oracle.conf && ldconfig
 
@@ -22,6 +26,8 @@ RUN ln -s /etc/php/8.1/mods-available/oci8.ini /etc/php/8.1/cli/conf.d/20-oci8.i
 RUN ln -s /etc/php/8.1/mods-available/oci8.ini /etc/php/8.1/apache2/conf.d/20-oci8.ini
 
 # Install the PHP PDO_OCI extension
+# Download https://www.php.net/distributions/php-8.1.15.tar.xz
+# extract to /receipt/pdo_oci/pdo_oci
 COPY /receipt/pdo_oci /tmp
 RUN cd /tmp && \
     cd pdo_oci && \
