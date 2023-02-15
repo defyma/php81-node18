@@ -40,6 +40,7 @@ RUN sed -i 's/DirectoryIndex\ index.html/DirectoryIndex\ index.php\ index.html/'
 RUN echo "display_errors = On" >> /etc/php81/php.ini
 
 # Log to stdout
+RUN chmod -R 777 /var/log/apache2
 RUN ln -sf /dev/stdout /var/log/apache2/access.log
 RUN ln -sf /dev/stdout /var/log/apache2/ssl_access.log
 RUN ln -sf /dev/stdout /var/log/apache2/ssl_request.log
