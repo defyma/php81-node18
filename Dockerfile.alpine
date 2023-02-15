@@ -20,8 +20,7 @@ RUN apk update && apk add apache2 php-apache2 \
 RUN npm i -g corepack && corepack enable && corepack prepare yarn@stable --activate
 
 # Configure Apache to listen on 0.0.0.0:8080
-RUN echo "Listen 0.0.0.0:8080" >> /etc/apache2/httpd.conf
-RUN echo "Listen 0.0.0.0:8443" >> /etc/apache2/httpd.conf
+RUN sed -i 's/Listen\ 80/Listen\ 0.0.0.0:8080/' /etc/apache2/httpd.conf
 
 # Enable the mod_rewrite module in Apache
 RUN sed -i 's/#LoadModule\ rewrite_module/LoadModule\ rewrite_module/' /etc/apache2/httpd.conf
