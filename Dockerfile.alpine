@@ -6,7 +6,7 @@ WORKDIR /var/www/html
 
 # Update and install Apache2 and PHP
 RUN apk update && apk add apache2 php-apache2 \
-        apache2-ssl curl php-apache2 php-bcmath php-bz2 php-calendar php-common php-ctype \
+        apache2-ssl curl php-opcache php-apache2 php-bcmath php-bz2 php-calendar php-common php-ctype \
         php-curl php-dom php-gd php-iconv php-mbstring php-mysqli php-mysqlnd \
         php-pgsql php-openssl php-pdo_mysql php-pdo_pgsql php-pdo_sqlite php-phar php-session php-xml \
         php-zip php-sqlite3 php-json php-ldap php-intl php-soap php-gmp php-xmlreader php-xmlwriter php-fileinfo php-tokenizer \
@@ -15,6 +15,8 @@ RUN apk update && apk add apache2 php-apache2 \
         php-mysqlnd php-openssl php-pcntl php-pdo php-pdo_mysql php-pdo_pgsql php-pgsql php-phar php-posix php-session php-shmop php-simplexml \
         php-soap php-sockets php-sodium php-sysvmsg php-sysvsem php-sysvshm php-tokenizer php-xml \
         php-xmlreader php-xmlwriter php-xsl php-zip php-zlib nodejs npm
+
+RUN echo "zend_extension=opcache.so" >> /etc/php81/conf.d/00_opcache.ini
 
 # Yarn Package Manager
 RUN npm i -g corepack && corepack enable && corepack prepare yarn@stable --activate
